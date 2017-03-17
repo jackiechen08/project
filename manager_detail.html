@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+	<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.0"/>
+
+	<link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	<link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+    <script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script type="text/javascript" src="js/materialize.min.js"></script>
+    <script type="text/javascript" src="js/materialize.clockpicker.js"></script>
+	<meta http-equiv = "X-UA-Compatible" content = "IE=edge,chrome=1">
+	<link type="text/css" rel="stylesheet" href="css/materialize.clockpicker.css" media="screen,projection"/>
+    <link rel="stylesheet" href="css/font-awesome.min.css">   
+    <title>Set_Detail</title>
+			
+</head>
+<body>
+	<div class = "navbar-fixed">
+			<nav class="light-blue lighten-1 " role="navigation">
+			    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+			    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+			      <ul class="right hide-on-med-and-down">
+			        <!--<li><a href="#!"><i class="material-icons">cloud</i></a></li>-->
+			        <li><a class="waves-effect" href="#!">HomePage</a></li>
+			        <!--<li><div class="divider"></div></li>
+			        <li><a class="subheader">新增</a></li>-->
+			        <li><a class="waves-effect" href="#!">新增預約空間</a></li>
+			        <li><a class="waves-effect" href="#">空間使用監控</a></li>
+			      </ul>
+			      
+			    </div>
+	  		</nav>
+		</div>
+		<!--Slidenav start--><!--Must put this out of nav block so it can be fixed-->
+		<ul id="nav-mobile" class="side-nav">
+			<li><a onclick="$('.button-collapse').sideNav('hide');"><i class="material-icons">clear_all</i></a></li>
+			<li><div class="divider"></div></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">stars</i>HomePage</a></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">room</i>新增預約空間</a></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">visibility</i>空間使用監控</a></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">settings</i>Settings</a></li>
+		</ul>
+		
+		<!--SlideNave end-->
+				
+    <br>
+    <div class="container">
+	    <div class="row">
+	    	<h3 class="col s12">細部設定頁面</h1>
+		    <form class="col s12">
+		        <div class="row">
+		          	<div class="input-field col s12">
+		            	<label for="input_starttime">Start Time</label>
+		            	<input id="input_starttime" class="timepicker" type="text">
+		          	</div>
+		        </div>
+		        <div class="row">
+		          	<div class="input-field col s12">
+		            	<label for="input_endtime">End Time</label>
+		            	<input id="input_endtime" class="timepicker" type="text">
+		          	</div>
+	        	</div>
+	        	<p class="range-field">
+	        		<label>欲設定時段數：</label>
+			      	<input type="range" id="timeset" min="1" max="24" value = "5" onchange = "timeSeg()" >
+			    </p>
+				<div id="show_segment"></div>
+	      	</form>
+	      	<br>
+	      	<button class="btn waves-effect waves-light" type="submit" name="action" onclick="certify_status()">Submit</button>
+	    </div>
+	</div>
+    <script type="text/javascript">
+        var segment = [];
+
+		function timeSeg() {
+			var start_time,end_time,start_dayOrNight,end_dayOrNight;
+
+			start_time = document.getElementById('input_starttime').value;			
+			end_time = document.getElementById('input_endtime').value;
+			start_time = start_time.split(":");
+			end_time = end_time.split(":");
+
+			var time_length,seperate_num;
+
+			if(start_time.length != 2||end_time.length != 2){
+				//請重新選擇
+				alert('請確定填入起訖時間');				
+			}
+			else{
+			    //顯示問題
+				start_dayOrNight = start_time[1].slice(-2);
+				end_dayOrNight = end_time[1].slice(-2);
+				start_time[1] = start_time[1].substring(-2);
+				end_time[1] = end_time[1].substring(-2);
+
+				var start_toMin = 0
+				var end_toMin = 0;
+                
+				if(start_dayOrNight == 'PM' && start_time[0] != '12')
+				{
+					start_time[0] = parseInt(start_time[0]) + 12;
+				}
+				if(end_dayOrNight == 'PM' && end_time[0] != '12'){
+					end_time[0] = parseInt(end_time[0]) + 12;
+				}
+				if(start_dayOrNight == 'AM' && start_time[0] == '12'){
+					start_time[0] = 0;
+				}
+				if(end_dayOrNight == 'AM' && end_time[0] == '12'){
+					end_time[0] = 0;
+				}
+				start_toMin = parseInt(start_time[0]) * 60 + parseInt(start_time[1]);
+				end_toMin = parseInt(end_time[0]) * 60 + parseInt(end_time[1]);
+				if(start_toMin > end_toMin){
+                    start_toMin = 1440 - start_toMin;
+                    time_length = parseInt(start_toMin) + parseInt(end_toMin);                    
+				} else{
+					time_length = parseInt(end_toMin) - parseInt(start_toMin); 
+				}
+
+				seperate_num = document.getElementById('timeset').value;
+				var each_segMin = parseInt(time_length / seperate_num);
+			    
+				if(each_segMin < 1){
+					alert('你分配的時間太少不夠分出預約時段,請重新設定');
+					document.getElementById('show_segment').innerHTML='';
+				} else{
+					document.getElementById('show_segment').innerHTML = '<table class="bordered"><thead><tr><th data-field="id">時間</th><th data-field="name">是否讓客人預約</th></tr></thead><tbody id="table_content"></tbody></table>';
+					var current_hour, current_min, pass_hour, pass_min;//headtime用為第一次時間				
+					current_hour = parseInt(start_time[0]);				
+					current_min = parseInt(start_time[1]);
+                    pass_hour = current_hour;
+					for(var i = 0; i < seperate_num; i++)
+					{
+                       
+                       pass_min = parseInt(current_min) + parseInt(each_segMin);
+
+                    	while(pass_min >= 60)
+                    	{
+                       		pass_min-=60;
+                       		pass_hour+=1;
+                       	}
+
+                       	while(pass_hour >= 24)
+                       	{
+                       		pass_hour-=24;                       	
+                       	}
+
+                       	current_min = parseInt(current_min);
+                       	pass_min = parseInt(pass_min);
+
+                       	var timeBlock_sentence = ("0" + Number(current_hour)).slice(-2) + ' : ' + ("0" + Number(current_min)).slice(-2) + ' ~ ' + ("0" + Number(pass_hour)).slice(-2) + ' : ' + ("0" + Number(pass_min)).slice(-2);
+                       	segment.push(timeBlock_sentence);
+
+                       	document.getElementById('table_content').innerHTML+=' <tr><td>'+ timeBlock_sentence + '</td><td><form action="#"><p><input type="checkbox" class="filled-in" id="checked' + i + '" checked="checked" /><label for="checked' + i + '"></label></p></form></td></tr>';
+                       	current_hour = pass_hour;
+                       	current_min = pass_min;
+                       	pass_min = 0;
+					}
+				}						
+			}
+        }
+
+	function certify_status(){
+		// read for panoid
+		var QueryString = function () {
+			// This function is anonymous, is executed immediately and 
+			// the return value is assigned to QueryString!
+			var query_string = {};
+			var query = window.location.search.substring(1);
+			var vars = query.split("&");
+			for (var i = 0; i < vars.length; i++) 
+			{
+				var pair = vars[i].split("=");
+				// If first entry with this name
+				if (typeof query_string[pair[0]] === "undefined") {
+					query_string[pair[0]] = decodeURIComponent(pair[1]);
+					// If second entry with this name
+				} else if (typeof query_string[pair[0]] === "string") {
+					var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+						  query_string[pair[0]] = arr;
+							// If third or later entry with this name
+						} else {
+						  query_string[pair[0]].push(decodeURIComponent(pair[1]));
+						}
+					  } 
+					  return query_string;
+					}();
+
+		var pano = QueryString.Pano;
+
+		var config = {
+			apiKey: "AIzaSyCcpXVxXydVYI0MoyrVai9uGhcLW1yCvwE",
+			authDomain: "manager-16d00.firebaseapp.com",
+			databaseURL: "https://manager-16d00.firebaseio.com",
+			storageBucket: "manager-16d00.appspot.com",
+			messagingSenderId: "855157254941"
+		};
+		firebase.initializeApp(config);
+
+		var active_status = [];
+		var seg_num = document.getElementById('timeset').value;
+
+		for(var i = 0; i < seg_num; i++)
+		{
+			var checkbox_id=document.getElementById('checked'+i).checked;
+			if(checkbox_id==true){
+				active_status.push('true');
+			} else{
+				active_status.push('false');
+			}
+		}
+		// Write In Firebase
+		//極限時間
+		firebase.database().ref(pano+'/time_limit').set(document.getElementById('input_starttime').value+' ~ '+document.getElementById('input_endtime').value);
+		//房間panoID
+		firebase.database().ref(pano +'/room').once('value').then(function(snapshot) {
+			  var marker_num=snapshot.val().marker_num;
+			for(var i = 0; i < marker_num; i++)
+			{
+			  	for(var j = 0; j < active_status.length; j++)
+			  	{
+			  		firebase.database().ref(pano + '/room/marker' + (i + 1) + '/appointstatus/' + segment[j]).set(active_status[j]);
+			  	}
+			}
+		});						
+	}
+	</script>
+    	<script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>
+	    <script type="text/javascript">
+		    $('#input_starttime').clockpicker({
+		      placement: 'bottom',
+		      align: 'left',
+		      twelvehour: true
+		    });
+		    $('#input_endtime').clockpicker({
+		      placement: 'bottom',
+		      align: 'left',
+		      darktheme: true,
+		      twelvehour: true //If U want 24 hour just set false
+		    });
+
+		    $('.button-collapse').sideNav();
+
+		</script>
+  	</body>
+</html>

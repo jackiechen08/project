@@ -1,0 +1,238 @@
+﻿<html>
+	<head>
+  		<meta charset = "utf-8">
+  		<meta http-equiv = "X-UA-Compatible" content = "IE=edge,chrome=1">
+ 		<meta name = "viewport" content = "width=device-width,height=device-height,initial-scale=1">
+  		<script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>  		        
+        <script type="text/javascript" src="js/materialize.min.js"></script>
+        <script type="text/javascript" src="js/manager_basic.js"></script>
+
+        <link rel="stylesheet" href="css/font-awesome.min.css">   
+        <link href="http://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+	    <link type="text/css" rel="stylesheet" href="css/materialize.min.css"  media="screen,projection"/>
+
+        <title>Basic setting</title>
+		<style>
+			#inputfile{
+				margin-left: auto;
+                margin-right: auto;
+			}
+			/**輪轉片css**/
+		</style>
+  	</head>
+
+  	<body >
+		<div class = "navbar-fixed">
+			<nav class="light-blue lighten-1 " role="navigation">
+			    <div class="nav-wrapper container"><a id="logo-container" href="#" class="brand-logo">Logo</a>
+			    <a href="#" data-activates="nav-mobile" class="button-collapse"><i class="material-icons">menu</i></a>
+			      <ul class="right hide-on-med-and-down">
+			        <!--<li><a href="#!"><i class="material-icons">cloud</i></a></li>-->
+			        <li><a class="waves-effect" href="#!">HomePage</a></li>
+			        <!--<li><div class="divider"></div></li>
+			        <li><a class="subheader">新增</a></li>-->
+			        <li><a class="waves-effect" href="#!">新增預約空間</a></li>
+			        <li><a class="waves-effect" href="#">空間使用監控</a></li>
+			      </ul>
+			      
+			    </div>
+	  		</nav>
+		</div>
+		<!--Slidenav start--><!--Must put this out of nav block so it can be fixed-->
+		<ul id="nav-mobile" class="side-nav">
+			<li><a onclick="$('.button-collapse').sideNav('hide');"><i class="material-icons">clear_all</i></a></li>
+			<li><div class="divider"></div></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">stars</i>HomePage</a></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">room</i>新增預約空間</a></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">visibility</i>空間使用監控</a></li>
+			<li><a class="waves-effect" href="#!"><i class="material-icons">settings</i>Settings</a></li>
+		</ul>
+		
+		<!--SlideNave end-->			
+	    <br>
+		<div class="container">
+		<br><br>
+             <div id="status_01"><h4>1.確認您空間的地址 <i class="fa fa-times" aria-hidden="true" style="color: red;"></i></h4></div><br>
+            <div id="show_addr"></div>
+            <script type="text/javascript">
+            	var QueryString = function () {
+					  // This function is anonymous, is executed immediately and 
+					  // the return value is assigned to QueryString!
+					  var query_string = {};
+					  var query = window.location.search.substring(1);
+					  var vars = query.split("&");
+					  for (var i=0;i<vars.length;i++) {
+					    var pair = vars[i].split("=");
+					        // If first entry with this name
+					    if (typeof query_string[pair[0]] === "undefined") {
+					      query_string[pair[0]] = decodeURIComponent(pair[1]);
+					        // If second entry with this name
+					    } else if (typeof query_string[pair[0]] === "string") {
+					      var arr = [ query_string[pair[0]],decodeURIComponent(pair[1]) ];
+					      query_string[pair[0]] = arr;
+					        // If third or later entry with this name
+					    } else {
+					      query_string[pair[0]].push(decodeURIComponent(pair[1]));
+					    }
+					  } 
+					  return query_string;
+				}();
+                    
+		     	if(QueryString.Addr!="null"&&QueryString.Addr!=undefined)
+		     	{   
+		     		location_info=[];			     		
+		     		location_info.push(QueryString.Addr);
+		     		location_info.push(QueryString.LAT);
+		     		location_info.push(QueryString.LNG);
+		     		document.getElementById("show_addr").innerHTML='<h5>'+'您目前空間的地址為: '+'<br>'+'</h5>'+'<h5>'+QueryString.Addr+'</h5>'+'<br>'+'<br>'
+		     		+'<a class="waves-effect waves-light btn" href="Address2Streetview.html">'+'重新選擇'+'</a>';			     		
+                    $( "#status_01" ).html('<h3>1.確認您空間的地址 <i class="fa fa-check" aria-hidden="true" style="color: green;"></i>');
+                    status1=true;			     	
+		     	}
+		     	else
+		     	{
+		     		document.getElementById("show_addr").innerHTML= '<strong>'+'確認您設立空間的地址'+'</strong>'+'<br>'+'<br>'+'<a class="waves-effect waves-light btn" href="Address2Streetview.html">'+'前往確認'+'</a>';
+		     		$( "#status_01" ).html('<h3>1.確認您空間的地址 <i class="fa fa-times" aria-hidden="true" style="color: red;"></i>');
+		     		status1=false;
+		     	}
+
+            </script>
+           
+            <br><br>
+            <div class="divider grey"></div><br>
+            <br>
+            <div id="status_02">
+            	<h4>2.選擇你的預約空間類型 <i class="fa fa-times" aria-hidden="true" style="color: red;"></i></h4>
+            </div>
+			<br>
+		  	<div class="carousel carousel-slider center" data-indicators="true" style="width:70%;height:80%;">
+		  		<div class="carousel-item  yellow  white-text">
+			    	<img src="images/camp.jpg" style="height:50%;">
+			     	<h3>營地</h3>
+			      	<h2>Camp</h2>		      
+			    	<br><br><br>		     
+			       	<div class="carousel-fixed-item center">
+			     		<a class="btn-floating waves-effect green black-text darken-text-2 " style="font-weight: bold;" onclick="type_choice(5)"><i class="material-icons">done</i></a>
+			    	</div>
+				</div>
+		    	<div class="carousel-item  blue darken-4 white-text">
+			    	<img src="images/restaurant.jpg" style="height:50%;">
+			     	<h3>餐廳</h3>
+			      	<h2>Restaurant</h2>		      
+			    	<br><br><br>		     
+			       	<div class="carousel-fixed-item center">
+			     		<a class="btn-floating waves-effect green black-text darken-text-2 " style="font-weight: bold;" onclick="type_choice(1)"><i class="material-icons">done</i></a>
+			    	</div>
+				</div>
+
+		    	<div class="carousel-item red darken-4 white-text">
+		    		<img src="images/studyroom.jpg" style="height:50%;">
+		     		<h3>自習室</h3>
+		      		<h2>Study Room</h2>
+		       		<br><br><br>		      		    
+		       		<div class="carousel-fixed-item center">
+		      			<a class="btn-floating waves-effect green black-text darken-text-2 " style="font-weight: bold;" onclick="type_choice(2)"><i class="material-icons">done</i></a>
+		    		</div>
+		    	</div>
+
+		    	<div class="carousel-item orange darken-4 white-text">
+		    		<img src="images/meetingroom.png" style="height:50%;">
+		     		<h3>會議室</h3>
+		      		<h2>Meeting Room</h2>		      
+		    		<br><br><br>		     
+		       		<div class="carousel-fixed-item center">
+		       			<a class="btn-floating waves-effect green black-text darken-text-2 " style="font-weight: bold;" onclick="type_choice(3)"><i class="material-icons">done</i></a>
+		    		</div>
+	    		</div>
+
+		    	<div class="carousel-item  pink darken-4 white-text">
+			    	<img src="images/ballcourt.jpg" style="height:50%;">
+			     	<h3>球場</h3>
+			      	<h2>Court</h2>		      
+		    		<br><br><br>		     
+			       	<div class="carousel-fixed-item center">
+			      		<a class="btn-floating waves-effect green black-text darken-text-2 " style="font-weight: bold;" onclick="type_choice(4)"><i class="material-icons">done</i></a>
+			    	</div>
+		    	</div>
+
+		  	</div>
+			<div id="input_section">
+	        </div>
+			
+            <br><br><div class="divider grey"></div><br><br>
+			          	  	
+              	<br><br>
+                <button class="btn waves-effect waves-light btn-large" type="submit" name="action" onclick="verify()">下一步
+    				<i class="material-icons right">send</i>
+  				</button>
+                <!--modal part-->
+  				<div id="modal1" class="modal" style="width:30%">
+					<div class="modal-content">
+				      	<p>資料尚未填寫完成</p>
+				    </div>
+				    <div class="modal-footer">
+				      	<a href="" class=" modal-action modal-close waves-effect waves-green btn-flat">返回</a>
+				    </div>
+			  	</div>
+
+			   	<div id="modal2" class="modal" style="width:30%">
+				    <div class="modal-content">
+				      	<p>確定送出?</p>				      
+				    </div>
+				    <div class="modal-footer">
+				      	<a id="certainty" class=" modal-action modal-close waves-effect waves-green btn-flat">確認</a>
+				    </div>
+			  	</div>
+
+				<div id="modal3" class="modal center-align" style="width:30%" >
+				    <div class="modal-content">
+				    	<div class="preloader-wrapper big active center-align">
+					    	<div class="spinner-layer spinner-blue-only center-align">
+					      		<div class="circle-clipper left">
+					        		<div class="circle"></div>
+					      		</div>
+					      		<div class="gap-patch">
+					        		<div class="circle"></div>
+					      		</div>
+					      		<div class="circle-clipper right">
+					        		<div class="circle"></div>
+					      		</div>
+					    	</div>
+					  	</div>
+					  	<br>
+				      	<p class="center-align">資料處理中...</p>				      
+				    </div>
+				    <div class="modal-footer">
+				      
+				    </div>
+				</div>
+
+              	<br><br>
+              	<div class="divider grey"></div>
+              	<br><br>        
+	    </div>
+		
+        <script type="text/javascript">
+            //輪轉片dom設定
+            $(document).ready(function(){
+				$('.carousel.carousel-slider').carousel({fullWidth: true});
+			});
+
+            $(document).ready(function(){
+    			// the "href" attribute of .modal-trigger must specify the modal ID that wants to be triggered
+				$('.modal').modal({
+                    dismissible: true});			
+			});
+
+           	$(document).ready(function() {
+				$('select').material_select();
+			});
+
+			$(function () { $("[data-toggle='tooltip']").tooltip(); });
+
+			$('.button-collapse').sideNav();
+        </script>
+        <script src="https://www.gstatic.com/firebasejs/3.7.2/firebase.js"></script>  
+        <script type="text/javascript" src="js/firebasestorage.js"></script> 
+  	</body>
+</html>

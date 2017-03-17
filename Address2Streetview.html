@@ -1,0 +1,151 @@
+
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Address2Streetview</title>
+        <style>
+          html, body 
+          {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+          }
+          #streetmap
+          {
+            float: left;
+            height: 45%;
+            width: 50%;
+          }
+          #pano
+          {
+            float: left;
+            height: 45%;
+            width: 50%;
+          }
+        </style>
+            <link rel="stylesheet" href="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/css/bootstrap.min.css">  
+            <script src="https://cdn.static.runoob.com/libs/jquery/2.1.1/jquery.min.js"></script>
+            <script src="https://cdn.static.runoob.com/libs/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8" />
+        <meta name = "viewport" content = "width=device-width,height=device-height,initial-scale=1">
+        <script>
+            var i;
+            var position;
+            var streetmap, panomap, position_addr = {lat:24.11941 , lng: 120.6783};
+            function trans() {
+                i = 0;
+                var position = $("#source").val();
+                addressToLatLng(position)
+            }
+
+            function addressToLatLng(addr) 
+            {
+                var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({
+                    "address": addr
+                }, function (results, status) {
+                    if (status == google.maps.GeocoderStatus.OK)  //If find address on google map
+                    {
+                        position_addr = results[0].geometry.location;
+                        streetmap = new google.maps.Map(document.getElementById('streetmap'), {
+                            center: position_addr,
+                            zoom: 19
+                        });
+                        panomap = new google.maps.StreetViewPanorama(document.getElementById('pano'), {
+                            position: position_addr,
+                            zoom: 19,
+                            pov: { 
+                                heading: 200,
+                                pitch: -20
+                            }
+                        });
+                       streetmap.setStreetView(panomap);
+                    } 
+                    else 
+                    {
+                        alert("查無經緯度" + "\n");
+                    }
+                });
+            }
+            //將經緯度傳到manager_basic.html
+            function SendPanoPosition()
+            {
+                var tmpPosition = panomap.getPosition();
+                var tmpPanoID = panomap.getPano();
+                /**document.getElementById("position_change").innerHTML= "<input type = "button" value = "Submit" name = "B2" onclick = "location.href='MarkerInfo.html?PAT='"+tmpPosition.lat()+"&LNG="+tmpPosition.lng()+"" >"**/
+                //將經緯度加入網址中
+                if(document.getElementById("source").value==""){
+                    var address=null;
+                }
+                else{
+                var address=document.getElementById("source").value;    
+                }
+                
+                document.location.href = "manager_basic.html?LAT="+tmpPosition.lat()+"&LNG="+tmpPosition.lng()+"&Addr="+address;
+             
+			 }
+       
+        </script>
+    </head>
+    
+    <body>
+    <br>
+       
+		<p>
+			輸入你的地址:<textarea rows = "1" name = "S1" cols = "50" id = "source">台中市南區興大路145號</textarea>
+            <button id="B1"  class="btn btn-primary" onclick="trans();"  data-toggle="tooltip" data-placement="top" title="搜尋你所輸入的地址">搜尋</button>
+            <button id="B2"  class="btn btn-primary" onclick="SendPanoPosition();"  data-toggle="tooltip" data-placement="top" title="確認你的場域所在位置">確認送出</button>
+              
+            <div id="position_change">
+         
+            </div>
+		</p>
+     
+        <div id="streetmap"></div>
+        <div id="pano"></div>
+        
+        <script type="text/javascript">
+            function initialize()
+            {
+                streetmap = new google.maps.Map(document.getElementById('streetmap'), {
+                    center: position_addr,
+                    zoom: 19
+                });
+        
+                panomap = new google.maps.StreetViewPanorama(document.getElementById('pano'), {
+                    position: position_addr,
+                    zoom: 10,
+                    pov: {
+                        heading: 200,
+                        pitch: 10
+                    }
+                });
+               streetmap.setStreetView(panomap);
+            }
+        </script>
+                
+
+		<script type="text/javascript">
+
+		  var _gaq = _gaq || [];
+		  _gaq.push(['_setAccount', 'UA-1478416-8']);
+		  _gaq.push(['_setDomainName', 'uhooamber.com']);
+		  _gaq.push(['_trackPageview']);
+
+		  (function() {
+			var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+			ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+			var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+		  })();
+
+		</script>
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>      
+        <script
+            src="https://maps.googleapis.com/maps/api/js?callback=initialize"
+            async defer>
+        </script>
+          <script>
+             $(function () { $("[data-toggle='tooltip']").tooltip(); });
+            </script>
+	</body>
+</html>
